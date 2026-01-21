@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>1D Fourier Visual & Audio Demo</title>
+<style>
+  body { font-family: sans-serif; background: #f0f0f0; }
+  canvas { border: 1px solid #444; display: block; }
+  .panel { margin-bottom: 6px; }
+  .controls { margin-top: 10px; }
+</style>
+</head>
+
+<body>
+
+<h2>1D Fourier Analysis – Visual & Sound</h2>
+
+<canvas id="freqStrip" width="512" height="32" class="panel"></canvas>
+<canvas id="freqPlot"  width="512" height="120" class="panel"></canvas>
+
+<canvas id="realStrip" width="512" height="32" class="panel"></canvas>
+<canvas id="realPlot"  width="512" height="120" class="panel"></canvas>
+
+<div class="controls">
+  Sigma:
+  <input type="range" id="sigma" min="1" max="50" value="10">
+  <button id="clear">Clear</button>
+  <button id="play">▶ Play</button>
+</div>
+
+<script src="fft1d.js"></script>
+<script src="app_1d.js"></script>
+
+</body>
+</html>

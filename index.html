@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fourier Analysis Interactive Demo</title>
+<style>
+  body {
+    font-family: sans-serif;
+    background: #f0f0f0;
+  }
+  .container {
+    display: flex;
+    gap: 20px;
+  }
+  canvas {
+    border: 1px solid #444;
+    image-rendering: pixelated;
+  }
+  .controls {
+    margin-top: 10px;
+  }
+</style>
+</head>
+
+<body>
+
+<h2>Interactive Fourier Analysis</h2>
+
+<div class="container">
+  <canvas id="freqCanvas" width="256" height="256"></canvas>
+  <canvas id="imgCanvas"  width="256" height="256"></canvas>
+</div>
+
+<div class="controls">
+  Sigma:
+  <input type="range" id="sigma" min="1" max="50" value="10">
+  <button id="clear">Clear</button>
+</div>
+
+<script src="fft.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
