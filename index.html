@@ -2,43 +2,75 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Fourier Analysis Interactive Demo</title>
+<title>Fourier Playground</title>
 <style>
-  body {
-    font-family: sans-serif;
-    background: #f0f0f0;
-  }
-  .container {
-    display: flex;
-    gap: 20px;
-  }
-  canvas {
-    border: 1px solid #444;
-    image-rendering: pixelated;
-  }
-  .controls {
-    margin-top: 10px;
-  }
+  body { font-family: sans-serif; padding: 20px; }
+  h1, h2 { margin: 10px 0; }
+  .tab { cursor: pointer; padding: 10px 20px; display: inline-block; background: #eee; margin-right: 5px; border-radius: 5px; }
+  .tab.active { background: #ddd; font-weight: bold; }
+  .section { display: none; margin-top: 20px; }
+  .section.active { display: block; }
+  canvas { border: 1px solid black; margin: 5px; vertical-align: top; }
+  .controls { margin-top: 10px; }
+  label { margin-right: 20px; }
 </style>
 </head>
-
 <body>
 
-<h2>Interactive Fourier Analysis</h2>
+<h1>Fourier Playground</h1>
 
-<div class="container">
-  <canvas id="freqCanvas" width="256" height="256"></canvas>
-  <canvas id="imgCanvas"  width="256" height="256"></canvas>
+<!-- Tabs -->
+<div>
+  <span class="tab active" onclick="showSection('section2d')">2D Demo</span>
+  <span class="tab" onclick="showSection('section1d')">1D Demo</span>
 </div>
 
-<div class="controls">
-  Sigma:
-  <input type="range" id="sigma" min="1" max="50" value="10">
-  <button id="clear">Clear</button>
+<!-- 2D Section -->
+<div id="section2d" class="section active">
+  <h2>2D Fourier Transform</h2>
+  <div>
+    <canvas id="freqCanvas" width="256" height="256"></canvas>
+    <canvas id="imgCanvas" width="256" height="256"></canvas>
+  </div>
+  <div class="controls">
+    <label>Sigma: <input type="range" id="sigma" min="1" max="50" value="10"></label>
+    <button id="clear">Clear</button>
+  </div>
 </div>
 
+<!-- 1D Section -->
+<div id="section1d" class="section">
+  <h2>1D Fourier Transform and Sound</h2>
+  <div>
+    <canvas id="freqStrip" width="512" height="32"></canvas>
+    <canvas id="freqPlot"  width="512" height="120" class="panel"></canvas>
+
+    <canvas id="realStrip" width="512" height="32" class="panel"></canvas>
+    <canvas id="realPlot"  width="512" height="120" class="panel"></canvas>
+  </div>
+  <div class="controls">
+    <label>Sigma: <input type="range" id="sigma1d" min="1" max="50" value="10"></label>
+    <button id="clear1d">Clear</button>
+    <button id="play">▶ Play</button>
+  </div>
+</div>
+
+<!-- Scripts -->
 <script src="fft.js"></script>
 <script src="app.js"></script>
+<script src="fft1d.js"></script>
+<script src="app_1d.js"></script>
+<script>
+function showSection(sectionId) {
+  // Hide all sections
+  document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+  // Show selected section
+  document.getElementById(sectionId).classList.add('active');
+  // Update tab highlighting
+  document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+  event.target.classList.add('active');
+}
+</script>
 
 </body>
 </html>

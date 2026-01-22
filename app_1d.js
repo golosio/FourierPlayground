@@ -16,18 +16,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 const N = 2048;
-const IMAGE_N = 512;
-const SIGMA_SCALE = 20;
+const IMAGE1D_N = 512;
+const SIGMA_SCALE_1D = 20;
 
-let freqRe = new Float32Array(N);
-let freqIm = new Float32Array(N);
+let freqRe1d = new Float32Array(N);
+let freqIm1d = new Float32Array(N);
 
 const freqStrip = document.getElementById("freqStrip");
 const freqPlot  = document.getElementById("freqPlot");
 const realStrip = document.getElementById("realStrip");
 const realPlot  = document.getElementById("realPlot");
 
-const sigmaSlider = document.getElementById("sigma");
+const sigmaSlider1D = document.getElementById("sigma");
 
 const ctxFS = freqStrip.getContext("2d");
 const ctxFP = freqPlot.getContext("2d");
@@ -35,42 +35,47 @@ const ctxRS = realStrip.getContext("2d");
 const ctxRP = realPlot.getContext("2d");
 
 // --- Mouse interaction ---
-let mouseDown = false;
-let x0 = 0;
-let amp = 0;
+//let mouseDown1D = false;
+//let x0 = 0;
+//let amp = 0;
+
 
 freqStrip.addEventListener("mousedown", e => {
   const r = freqStrip.getBoundingClientRect();
-  x0 = Math.round(e.clientX - r.left);
-  amp = 0;
-  mouseDown = true;
-  requestAnimationFrame(tick);
+  fx01d = Math.round(e.clientX - r.left);
+  fy01d = Math.round((e.clientY - r.top));
+  amplitude = 0;
+  mouseDown1D = true;
+  requestAnimationFrame(tick1d);
 });
 
-window.addEventListener("mouseup", () => mouseDown = false);
 
-function tick() {
-  if (!mouseDown) return;
-  amp += 0.05;
-  addGaussian1D(x0, amp);
-  drawFrequency();
-  requestAnimationFrame(tick);
+window.addEventListener("mouseup", () => mouseDown1D = false);
+
+
+function tick1d() {
+  if (!mouseDown1D) return;
+  amplitude += 0.05;
+  addGaussian1D(fx01d, amplitude);
+  drawFrequency1D();
+  requestAnimationFrame(tick1d);
 }
+
 
 // --- Add Gaussian in Fourier space ---
 function addGaussian1D(x0, amp) {
-  const sigma = sigmaSlider.value / SIGMA_SCALE;
-  //const k0 = Math.floor(x0 * N / IMAGE_N);
+  const sigma = sigmaSlider1D.value / SIGMA_SCALE_1D;
+  //const k0 = Math.floor(x0 * N / IMAGE1D_N);
   const k0 = Math.floor(x0);
     
-  let reS = fftshift1D(freqRe);
+  let reS = fftshift1D(freqRe1d);
 
   for (let k = 0; k < N; k++) {
     const dk = k - k0;
     reS[k] += amp * Math.exp(-(dk*dk)/(2*sigma*sigma));
   }
 
-  freqRe = fftshift1D(reS);
+  freqRe1d = fftshift1D(reS);
 }
 
 // --- Drawing ---
@@ -110,9 +115,9 @@ function drawPlot(ctx, data) {
   ctx.stroke();
 }
 
-function drawFrequency() {
-  const reS = fftshift1D(freqRe);
-  const slice = Array.from(reS.slice(0, IMAGE_N));
+function drawFrequency1D() {
+  const reS = fftshift1D(freqRe1d);
+  const slice = Array.from(reS.slice(0, IMAGE1D_N));
 
   drawGrayStrip(ctxFS, slice);
   drawPlot(ctxFP, slice);
@@ -121,30 +126,30 @@ function drawFrequency() {
 }
 
 function drawReal() {
-  let re = fftshift1D(freqRe);
+  let re = fftshift1D(freqRe1d);
   let im = new Float32Array(N);
 
   fft1d(re, im, true);
   re = fftshift1D(re);
 
-  const slice = Array.from(re.slice(0, IMAGE_N));
+  const slice = Array.from(re.slice(0, IMAGE1D_N));
 
   drawGrayStrip(ctxRS, slice);
   drawPlot(ctxRP, slice);
 }
 
 // --- Clear ---
-document.getElementById("clear").onclick = () => {
-  freqRe.fill(0);
-  freqIm.fill(0);
-  drawFrequency();
+document.getElementById("clear1d").onclick = () => {
+  freqRe1d.fill(0);
+  freqIm1d.fill(0);
+  drawFrequency1D();
 };
 
 // --- Play sound ---
 const audioCtx = new AudioContext();
 
 document.getElementById("play").onclick = () => {
-  let re = fftshift1D(freqRe);
+  let re = fftshift1D(freqRe1d);
   let im = new Float32Array(N);
   fft1d(re, im, true);
 
@@ -164,4 +169,4 @@ document.getElementById("play").onclick = () => {
 
 };
 
-drawFrequency();
+drawFrequency1D();
