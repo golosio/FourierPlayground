@@ -38,26 +38,40 @@ const clearBtn = document.getElementById("clear");
 let freqRe = new Float32Array(FULL_N * FULL_N);
 let freqIm = new Float32Array(FULL_N * FULL_N);
 
-let mouseDown = false;
 let fx0 = 0, fy0 = 0;
 let amplitude = 0;
 
-// --- mouse interaction ---
-freqCanvas.addEventListener("mousedown", e => {
+// --- pointer interaction (mouse + touch) ---
+
+let pointerDown = false;
+
+freqCanvas.addEventListener("pointerdown", e => {
+  e.preventDefault();
+
   const rect = freqCanvas.getBoundingClientRect();
-  fx0 = Math.round((e.clientX - rect.left));
-  fy0 = Math.round((e.clientY - rect.top));
+  fx0 = Math.round(
+    (e.clientX - rect.left) * freqCanvas.width / rect.width
+  );
+  fy0 = Math.round(
+    (e.clientY - rect.top) * freqCanvas.height / rect.height
+  );
+
   amplitude = 0;
-  mouseDown = true;
+  pointerDown = true;
   requestAnimationFrame(tick);
 });
 
-window.addEventListener("mouseup", () => {
-  mouseDown = false;
+window.addEventListener("pointerup", () => {
+  pointerDown = false;
 });
 
+window.addEventListener("pointercancel", () => {
+  pointerDown = false;
+});
+
+
 function tick() {
-  if (!mouseDown) return;
+  if (!pointerDown) return;
   amplitude += 0.05;
   addGaussian(fx0, fy0, amplitude);
   updateViews();

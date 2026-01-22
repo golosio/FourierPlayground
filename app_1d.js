@@ -40,17 +40,24 @@ const ctxRP = realPlot.getContext("2d");
 //let amp = 0;
 
 
-freqStrip.addEventListener("mousedown", e => {
+freqStrip.addEventListener("pointerdown", e => {
+  e.preventDefault();
+
   const r = freqStrip.getBoundingClientRect();
-  fx01d = Math.round(e.clientX - r.left);
-  fy01d = Math.round((e.clientY - r.top));
+  fx01d = Math.round(
+    (e.clientX - r.left) * freqStrip.width / r.width
+  );
+  fy01d = Math.round(
+    (e.clientY - r.top) * freqStrip.height / r.height
+  );
+
   amplitude = 0;
   mouseDown1D = true;
   requestAnimationFrame(tick1d);
 });
 
-
-window.addEventListener("mouseup", () => mouseDown1D = false);
+window.addEventListener("pointerup", () => mouseDown1D = false);
+window.addEventListener("pointercancel", () => mouseDown1D = false);
 
 
 function tick1d() {
