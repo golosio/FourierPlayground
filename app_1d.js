@@ -27,7 +27,7 @@ const freqPlot  = document.getElementById("freqPlot");
 const realStrip = document.getElementById("realStrip");
 const realPlot  = document.getElementById("realPlot");
 
-const sigmaSlider1D = document.getElementById("sigma");
+const sigmaSlider1D = document.getElementById("sigma1d");
 
 const ctxFS = freqStrip.getContext("2d");
 const ctxFP = freqPlot.getContext("2d");
